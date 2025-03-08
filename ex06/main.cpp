@@ -6,21 +6,20 @@
 /*   By: andmart2 <andmart2@student.42barcelona.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 12:46:41 by andmart2          #+#    #+#             */
-/*   Updated: 2025/02/12 13:05:56 by andmart2         ###   ########.fr       */
+/*   Updated: 2025/03/08 19:24:30 by andmart2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Harl.hpp"
 
-int	main(int argc, char *argv[])
-{
-	Harl harl;
+int main(int argc, char *argv[]) {
+    if (argc != 2) {
+        std::cerr << "Usage: " << argv[0] << " level" << std::endl;
+        return 1;
+    }
 
-	if (argc != 2)
-	{
-		std::cout << "Wrong number of parameters. Try ./harlFilter <level>" << std::endl;
-		return (1);
-	}
-	harl.complain(argv[1]);
-	return (0);
+    Harl harl;
+    harl.complain(argv[1]);
+    
+    return 0;
 }

@@ -6,7 +6,7 @@
 /*   By: andmart2 <andmart2@student.42barcelona.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 12:39:19 by andmart2          #+#    #+#             */
-/*   Updated: 2025/02/12 13:03:24 by andmart2         ###   ########.fr       */
+/*   Updated: 2025/03/08 18:48:19 by andmart2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,49 +16,64 @@
 
 std::string replace_strings(std::string line, std::string s1, std::string s2)
 {
-	size_t	size;
-	size_t	start;
+    size_t size;
+    size_t start;
+    std::string newLine;
 
-	std::string newLine;
 	start = 0;
-	while (true)
-	{
-		size = line.find(s1, start);
-		if (size == std::string::npos)
-			break ;
-		newLine += line.substr(start, size - start) + s2;
-		start = size + s1.length();
-	}
-	newLine += line.substr(start);
-	return (newLine);
+
+    while (true)
+    {
+        size = line.find(s1, start);
+        if (size == std::string::npos)
+            break;
+        newLine += line.substr(start, size - start) + s2;
+        start = size + s1.length();
+    }
+    newLine += line.substr(start);
+    return newLine;
 }
 
-int	main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
-	if (argc != 4 || !std::string(argv[2]).length()
-		|| !std::string(argv[3]).length() || !std::string(argv[1]).length())
-	{
-		std::cout << "Please write three arguments: <filename> <oldstring> <newstring>" << std::endl;
-		return (1);
-	}
+    if (argc != 4)
+    {
+        std::cerr << "Usage: " << argv[0] << " <filename> <oldstring> <newstring>\n";
+        return 1;
+    }
 
-	std::ifstream infile;
-	std::string s1 = argv[2];
-	std::string s2 = argv[3];
+    std::string filename = argv[1];
+    std::string s1 = argv[2];
+    std::string s2 = argv[3];
 
-	infile.open(argv[1], std::ios_base::in);
-	std::ofstream outfile;
-	std::string s3 = std::string(argv[1]) + ".replace";
-	outfile.open(s3.c_str(), std::ios_base::out);
-	if (!infile.is_open() || !outfile.is_open())
-	{
-		std::cout << argv[1] << ": Error opening file." << std::endl;
-		return (1);
-	}
-	std::string line;
-	while (getline(infile, line))
-	{
-		line = replace_strings(line, s1, s2);
-		outfile << line << std::endl;
-	}
+    if (s1.empty())
+    {
+        std::cerr << "Error: The string to replace (s1) cannot be empty.\n";
+        return 1;
+    }
+
+    std::ifstream infile(filename);
+    if (!infile)
+    {
+        std::cerr << "Error: Could not open input file '" << filename << "'\n";
+        return 1;
+    }
+
+    std::string outFilename = filename + ".replace";
+    std::ofstream outfile(outFilename);
+    if (!outfile)
+    {
+        std::cerr << "Error: Could not create output file '" << outFilename << "'\n";
+        return 1;
+    }
+
+    std::string line;
+    while (getline(infile, line))
+    {
+        outfile << replace_strings(line, s1, s2) << '\n';
+    }
+
+    std::cout << "File processed successfully: " << outFilename << '\n';
+
+    return 0;
 }
